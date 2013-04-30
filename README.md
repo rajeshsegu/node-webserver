@@ -1,10 +1,15 @@
 node-webserver
 ==============
 
+Happy prototyping...
+
 Basic HTTP Node webserver. All you have to do is,
 
-cmd-prompt> node webserver.js
+<strong>$ node webserver.js</strong>
+
 Server running at http://localhost:8080/
 
 
-Happy prototyping...
+
+
+
