@@ -1,0 +1,12 @@
+{
+    "name": "app-boilerplate",
+    "description": "My App Boilerplate",
+    "version": "0.0.1",
+    "private": true,
+    "dependencies": {
+        "express": "*",
+        "prettyjson":"*",
+        "handlebars":"*",
+        "hbs": "*"        
+    }
+}

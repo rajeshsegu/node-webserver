@@ -1,60 +1,149 @@
-var http = require('http');
-var fs = require('fs');
-var path = require('path');
- 
-http.createServer(function (request, response) {
- 
-    console.log('Request: '+request.url);
-     
-    var filePath = '.' + request.url;
-    if (filePath == './')
-        filePath = './index.html';
-         
-    var extname = path.extname(filePath);
-    var contentType = 'text/html';
-    switch (extname) {
-        case '.js':
-            contentType = 'text/javascript';
-            break;
-        case '.css':
-            contentType = 'text/css';
-            break;
-        case '.jpg':
-            contentType = 'image/jpeg';
-            break;
-        case '.png':
-            contentType = 'image/png';
-            break;
-        case '.gif':
-            contentType = 'image/gif';
-            break;
-    }
-     
-    path.exists(filePath, function(exists) {
-        //tmp for development.
-        response.writeHead(302, {            
-            "Cache-Control" : "no-cache, no-store, must-revalidate",
-            "Pragma": "no-cache",
-            "Expires": 0
-        });
-        if (exists) {
-            fs.readFile(filePath, function(error, content) {
-                if (error) {
-                    response.writeHead(500);
-                    response.end();
-                }
-                else {
-                    response.writeHead(200, { 'Content-Type': contentType });
-                    response.end(content, 'utf-8');
-                }
-            });
-        }
-        else {
-            response.writeHead(404);
-            response.end();
-        }
-    });
-     
-}).listen(8080);
+var http = require('http'),
+    fs = require('fs'),
+    path = require('path'),
+    express = require('express');
 
+var app = express();
+
+app.configure(function(){
+    
+    //The order of which middleware are "defined" using app.use() is very important, 
+    // they are invoked sequentially, thus this defines middleware precedence.
+    
+    app.use(express.logger({ format: 'dev' }));
+        
+    app.use(express.cookieParser());
+    app.use(express.bodyParser());
+    app.use(express.methodOverride());    
+    app.use(express.compress());
+    app.use(express.responseTime());
+    
+    //Handle favicon
+    app.use(express.favicon());
+    
+    //Handlebar templates
+    //More @ https://github.com/donpark/hbs
+    app.set('views', __dirname + '/views');        
+    app.set('view engine', 'hbs');
+    
+    //Generic server error handling
+    app.use(express.errorHandler({
+        dumpExceptions: true, 
+        showStack: true
+    }));
+    
+    //Log Errors
+    app.use(function (err, req, res, next) {        
+        console.error(err.stack);
+        next(err);
+    });
+    
+});
+
+// "app.router" positions our routes 
+// above the middleware defined below,
+// this means that Express will attempt
+// to match & call routes _before_ continuing
+// on, at which point we assume it's a 404 because
+// no route has handled the request.
+
+app.use(app.router);
+
+
+//Static files can be served with express' static middleware. 
+//I usually make a directory for all static files to be served from the "public" folder.
+app.use('/public', express.static(__dirname + '/public', { maxAge: 86400000 /*one-day*/ }));
+
+
+//Routers
+
+app.get("/", function(req, res, next){
+    res.redirect(301, '/public/index.html');
+});
+
+
+//Error Routes
+
+app.get('/404', function(req, res, next){
+  // trigger a 404 since no other middleware
+  // will match /404 after this one, and we're not
+  // responding here
+  next();
+});
+
+app.get('/403', function(req, res, next){
+  // trigger a 403 error
+  var err = new Error('not allowed!');
+  err.status = 403;
+  next(err);
+});
+
+app.get('/500', function(req, res, next){
+  // trigger a generic (500) error
+  next(new Error('keyboard cat!'));
+});
+
+
+// Since this is the last non-error-handling
+// middleware use()d, we assume 404, as nothing else
+// responded.
+
+// $ curl http://localhost:8080/notfound
+// $ curl http://localhost:8080/notfound -H "Accept: application/json"
+// $ curl http://localhost:8080/notfound -H "Accept: text/plain"
+
+app.use(function(req, res, next){
+  
+  res.status(404);
+  
+  // respond with html page
+  if (req.accepts('html')) {
+    res.render('error/404.hbs', { url: req.url });
+    return;
+  }
+
+  // respond with json
+  if (req.accepts('json')) {
+    res.send({ error: 'Not found' });
+    return;
+  }
+
+  // default to plain-text. send()
+  res.type('txt').send('Not found');
+    
+});
+
+// error-handling middleware, take the same form
+// as regular middleware, however they require an
+// arity of 4, aka the signature (err, req, res, next).
+// when connect has an error, it will invoke ONLY error-handling
+// middleware.
+
+// If we were to next() here any remaining non-error-handling
+// middleware would then be executed, or if we next(err) to
+// continue passing the error, only error-handling middleware
+// would remain being executed, however here
+// we simply respond with an error page.
+
+app.use(function(err, req, res, next){
+  // we may use properties of the error object
+  // here and next(err) appropriately, or if
+  // we possibly recovered from the error, simply next().
+  res.status(err.status || 500);
+  res.render('error/500.hbs', { error: err });
+});
+
+
+//Process Management
+process.on('uncaughtException', function (err) {
+  console.log('PROCESS: Caught exception: ' + err);
+});
+
+process.on('exit', function() {  
+  console.log('PROCESS: !!!!!EXITED!!!!');
+});
+
+
+//Kick-Start the server
+app.listen(8080);
 console.log('Server running at http://localhost:8080/');
