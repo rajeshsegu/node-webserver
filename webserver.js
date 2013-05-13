@@ -1,3 +1,12 @@
+/*!
+ * Web Server
+ * MIT Licensed
+ */
+
+/**
+ * Module dependencies.
+ */
+
 var http = require('http'),
     fs = require('fs'),
     path = require('path'),
@@ -13,7 +22,7 @@ app.configure(function(){
     app.use(express.logger({ format: 'dev' }));
         
     app.use(express.cookieParser());
-    app.use(express.bodyParser());
+    app.use(express.bodyParser({ keepExtensions: true, uploadDir: './files' }));
     app.use(express.methodOverride());    
     app.use(express.compress());
     app.use(express.responseTime());
@@ -40,6 +49,15 @@ app.configure(function(){
     
 });
 
+/**
+ * noop middleware.
+ */
+
+function noop(req, res, next) {
+  next();
+}
+
+
 // "app.router" positions our routes 
 // above the middleware defined below,
 // this means that Express will attempt
@@ -57,10 +75,18 @@ app.use('/public', express.static(__dirname + '/public', { maxAge: 86400000 /*on
 
 //Routers
 
+//Multipart upload REST end-point
+app.post("/upload", function(req, res, next){
+    if(req.files){
+        console.log(JSON.stringify(req.files));
+    }
+    res.status(200);
+    res.end(JSON.stringify(req.files));    
+});
+
 app.get("/", function(req, res, next){
     res.redirect(301, '/public/index.html');
 });
-
 
 //Error Routes
 
