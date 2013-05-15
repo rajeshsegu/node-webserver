@@ -7,6 +7,9 @@
         "express": "*",
         "prettyjson":"*",
         "handlebars":"*",
-        "hbs": "*"        
+        "stylus":"*",
+        "hbs": "*",
+        "async": "*",
+        "mongoose":"*"
     }
 }
