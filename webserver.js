@@ -7,10 +7,7 @@
  * Module dependencies.
  */
 
-var http = require('http'),
-    fs = require('fs'),
-    path = require('path'),
-    express = require('express');
+var express = require('express');
 
 var app = express();
 
@@ -49,14 +46,7 @@ app.configure(function(){
     
 });
 
-/**
- * noop middleware.
- */
-
-function noop(req, res, next) {
-  next();
-}
-
+//REGISTER ROUTERS
 
 // "app.router" positions our routes 
 // above the middleware defined below,
@@ -73,42 +63,7 @@ app.use(app.router);
 app.use('/public', express.static(__dirname + '/public', { maxAge: 86400000 /*one-day*/ }));
 
 
-//Routers
-
-//Multipart upload REST end-point
-app.post("/upload", function(req, res, next){
-    if(req.files){
-        console.log(JSON.stringify(req.files));
-    }
-    res.status(200);
-    res.end(JSON.stringify(req.files));    
-});
-
-app.get("/", function(req, res, next){
-    res.redirect(301, '/public/index.html');
-});
-
-//Error Routes
-
-app.get('/404', function(req, res, next){
-  // trigger a 404 since no other middleware
-  // will match /404 after this one, and we're not
-  // responding here
-  next();
-});
-
-app.get('/403', function(req, res, next){
-  // trigger a 403 error
-  var err = new Error('not allowed!');
-  err.status = 403;
-  next(err);
-});
-
-app.get('/500', function(req, res, next){
-  // trigger a generic (500) error
-  next(new Error('keyboard cat!'));
-});
-
+//MIDDLEWARE
 
 // Since this is the last non-error-handling
 // middleware use()d, we assume 404, as nothing else
@@ -159,15 +114,11 @@ app.use(function(err, req, res, next){
   res.render('error/500.hbs', { error: err });
 });
 
+//ROUTES
+require("./routes/common.js")(app); 
 
-//Process Management
-process.on('uncaughtException', function (err) {
-  console.log('PROCESS: Caught exception: ' + err);
-});
-
-process.on('exit', function() {  
-  console.log('PROCESS: !!!!!EXITED!!!!');
-});
+//PROCESS
+require('./lib/process.js')(process);
 
 
 //Kick-Start the server
