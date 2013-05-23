@@ -7,7 +7,12 @@
  * Module dependencies.
  */
 
-var express = require('express');
+var express = require('express'),
+    utils   = require('./lib/utils'),
+    config  = require("./config.json");
+
+console.log(config.getValue("server.port"));
+console.log(config.getValue("server.host"));
 
 var app = express();
 
@@ -62,6 +67,10 @@ app.use(app.router);
 //I usually make a directory for all static files to be served from the "public" folder.
 app.use('/public', express.static(__dirname + '/public', { maxAge: 86400000 /*one-day*/ }));
 
+//COMMON ROUTES
+require("./routes/common.js")(app); 
+
+
 
 //MIDDLEWARE
 
@@ -114,13 +123,12 @@ app.use(function(err, req, res, next){
   res.render('error/500.hbs', { error: err });
 });
 
-//ROUTES
-require("./routes/common.js")(app); 
-
 //PROCESS
 require('./lib/process.js')(process);
 
 
 //Kick-Start the server
-app.listen(8080);
+app.listen( config.getValue("server.port") || 8080,  //PORT
+            config.getValue("server.host") || "localhost" );  //HOSTNAME
+
 console.log('Server running at http://localhost:8080/');

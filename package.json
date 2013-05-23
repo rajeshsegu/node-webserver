@@ -4,12 +4,21 @@
     "version": "0.0.1",
     "private": true,
     "dependencies": {
+        
+        "forever": "*",
+        "optimist": "*",
+        "mongoose": "*",
+        "node-redis": "*",
+        
+        "request": "*",
+        "requirejs": "*",
+        "async": "*",  
+        
         "express": "*",
-        "prettyjson":"*",
         "handlebars":"*",
-        "stylus":"*",
         "hbs": "*",
-        "async": "*",
-        "mongoose":"*"
+        
+        "prettyjson":"*",        
+        "stylus":"*"                         
     }
 }

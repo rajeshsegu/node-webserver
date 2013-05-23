@@ -1,4 +1,4 @@
-var CommonRouters = function(app) {
+module.exports = function(app) {
     //Error Routes
     
 app.get("/", function(req, res, next){
@@ -33,8 +33,4 @@ app.get('/500', function(req, res, next){
   next(new Error('keyboard cat!'));
 });   
 
-}
-
-module.exports = function(app){
-    return new CommonRouters(app);
-}
+};
