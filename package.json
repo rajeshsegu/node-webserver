@@ -8,7 +8,11 @@
         "forever": "*",
         "optimist": "*",
         "mongoose": "*",
+        "connect-mongo": "*",
         "node-redis": "*",
+        "passport": "*",
+        "passport-local": "*",
+        "bcrypt" : "*",
         
         "request": "*",
         "requirejs": "*",

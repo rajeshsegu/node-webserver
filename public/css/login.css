@@ -1,0 +1,304 @@
+html,body,div,span,applet,object,iframe,h1,h2,h3,h4,h5,h6,p,blockquote,pre,a,abbr,acronym,address,big,cite,code,del,dfn,em,img,ins,kbd,q,s,samp,small,strike,sub,sup,tt,var,b,u,i,center,dl,dt,dd,ol,ul,li,fieldset,form,label,legend,table,caption,tbody,tfoot,thead,tr,th,td,article,aside,canvas,details,embed,figure,figcaption,footer,header,hgroup,menu,nav,output,ruby,section,summary,time,mark,audio,video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section {
+    display: block;
+}
+
+body {
+    line-height: 1;
+}
+
+ol,ul {
+    list-style: none;
+}
+
+blockquote,q {
+    quotes: none;
+}
+
+blockquote:before,blockquote:after,q:before,q:after {
+    content: "";
+    content: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+body {
+    background: url(../img/login/body-bg.png);
+    color: #838383;
+    font: 13px "Droid Sans",Arial,Helvetica,sans-serif;
+}
+
+h1,h2,h3,h4,h5,h6 {
+    font-weight: 700;
+    font-family: "Droid Sans",sans-serif;
+    color: #434853;
+    text-shadow: 0 1px 0 #fff;
+    letter-spacing: -.5px;
+}
+
+h1 {
+    font-size: 20px;
+    color: #2d932b;
+    padding: 0 0 13px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+h2 {
+    font-size: 24px;
+}
+
+h3 {
+    font-size: 17px;
+}
+
+h4 {
+    font-size: 14px;
+}
+
+h5 {
+    font-size: 12px;
+}
+
+h6 {
+    font-size: 10px;
+}
+
+input,textarea {
+    font-family: tahoma,arial;
+    font-size: 12px;
+    color: #57595d;
+    outline: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+p {
+    line-height: 20px;
+}
+
+#box_bg {
+    border: 1px solid #d5d5d5;
+    background: #f9f9f9;
+    width: 380px;
+    display: block;
+    margin: 100px auto 0 auto;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    box-shadow: 0 0 2px #dadada,inset 0 -3px 0 #e6e6e6;
+}
+
+#content {
+    padding: 23px 28px;
+}
+
+.social {
+    padding: 13px 0 0 0;
+    height: 75px;
+}
+
+.blue {
+    color: #2b83b6;
+}
+
+.twitter {
+    background: url(../img/login/twitter_btn.png) no-repeat;
+    height: 32px;
+    width: 157px;
+    display: block;
+    float: left;
+    margin-top: 10px;
+}
+
+.twitter:hover {
+    background: url(../img/login/twitter_btn.png) no-repeat;
+    background-position: 0 -32px;
+}
+
+.twitter:active {
+    margin-top: 11px;
+}
+
+.btn_1 {
+    padding: 8px 0 0 35px;
+    text-shadow: -1px -1px 0 #0083b3;
+    color: #fff;
+    font-weight: 700;
+    font-size: 12px;
+    height: 32px;
+    display: block;
+}
+
+.fb {
+    background: url(../img/login/fb_btn.png) no-repeat;
+    height: 32px;
+    width: 157px;
+    display: block;
+    float: right;
+    margin-top: 10px;
+}
+
+.fb:hover {
+    background: url(../img/login/fb_btn.png) no-repeat;
+    background-position: 0 -32px;
+}
+
+.fb:active {
+    margin-top: 11px;
+}
+
+.btn_2 {
+    padding: 8px 0 0 31px;
+    text-shadow: -1px -1px 0 #366c96;
+    color: #fff;
+    font-weight: 700;
+    font-size: 12px;
+    height: 32px;
+    display: block;
+}
+
+.button {
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    display: inline-block;
+    float: right;
+    margin-top: 18px;
+}
+
+.button a {
+    padding: 9px 26px 8px 26px;
+    color: #fff;
+    font-weight: 700;
+    font-size: 14px;
+    display: block;
+}
+
+.button.green {
+    background-image: linear-gradient(bottom, #2D922B 0%, #58BD56 100%);
+    background-image: -o-linear-gradient(bottom, #2D922B 0%, #58BD56 100%);
+    background-image: -moz-linear-gradient(bottom, #2D922B 0%, #58BD56 100%);
+    background-image: -webkit-linear-gradient(bottom, #2D922B 0%, #58BD56 100%);
+    background-image: -ms-linear-gradient(bottom, #2D922B 0%, #58BD56 100%);
+    background-image: -webkit-gradient(linear,left bottom,left top,color-stop(0, #2D922B),color-stop(1, #58BD56));
+    -ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr=#58BD56, endColorstr=#2D922B)";
+    border: 1px solid #309230;
+    border-bottom: 2px solid #166d16;
+    box-shadow: inset 0 1px 0 #a1daa0;
+    text-shadow: -1px -1px 0 #369135;
+    background-color: #49ac47;
+}
+
+.button.green:hover {
+    background: #49ac47;
+}
+
+.button.green:active {
+    margin-top: 19px;
+}
+
+#login {
+    padding: 13px 0 0 0;
+    border-top: 1px solid #e0e0e0;
+}
+
+.login {
+    font-size: 14px;
+    color: #8e8d8d;
+    font-family: "Droid Sans";
+    padding: 11px 15px 10px 50px;
+    background-color: #fdfdfd;
+    width: 255px;
+    display: block;
+    border: 1px solid #d8d8d8;
+    margin: 13px 0 -3px 0;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+    box-shadow: inset 2px 2px 4px #f1f1f1;
+}
+
+.user {
+    background: url(../img/login/user.png) no-repeat;
+}
+
+.password {
+    background: url(../img/login/password.png) no-repeat;
+}
+
+.checkbox {
+    margin: 50px 0 15px 0;
+}
+
+.checkbox li {
+    list-style: none;
+    height: 15px;
+}
+
+.checkbox li:not(#foo)>fieldset>div>span>input[type="checkbox"] {
+    opacity: 0;
+    float: left;
+    width: 15px;
+}
+
+.checkbox li:not(#foo)>fieldset>div>span>input[type="checkbox"]+label {
+    margin: 0;
+    clear: none;
+    padding: 0 0 0 22px;
+    cursor: pointer;
+    background: url(../img/login/check.png) no-repeat;
+    height: 15px;
+    display: block;
+}
+
+.checkbox li:not(#foo)>fieldset>div>span>input[type="checkbox"]:checked+label {
+    background: url(../img/login/check.png) no-repeat;
+    height: 15px;
+    display: block;
+    background-position: 0 -15px;
+}
+
+#bottom_text {
+    margin: 12px auto;
+    width: 300px;
+    display: block;
+    text-align: center;
+    text-shadow: 1px 1px 0 #fff;
+    line-height: 19px;
+}
+
+#bottom_text a {
+    color: #2d932b;
+    font-weight: 700;
+    padding: 0 8px 0 0;
+    background: url(../img/login/bullet.png) no-repeat 100% 50%;
+}
+
+#bottom_text a:hover {
+    color: #878787;
+    -webkit-transition: all .2s linear;
+    -moz-transition: all .2s linear;
+    -o-transition: all .3s linear;
+    -transition: all .2s linear;
+}
+
+#blue {
+    color: #2b83b6!important;
+}
+
+#blue:hover {
+    color: #878787!important;
+}

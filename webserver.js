@@ -8,18 +8,32 @@
  */
 
 var express = require('express'),
-    utils   = require('./lib/utils'),
-    config  = require("./config.json");
+    passport= require('passport'),
+    utils   = require('./app/utils/utils'),
+    database = require('./app/database'),
+    auth     = require("./app/authenticate"),    
+    config  = require("./config/config.json"),
+    info    = require("./package.json");
 
-console.log(config.getValue("server.port"));
-console.log(config.getValue("server.host"));
-
+//Setup Express
 var app = express();
+
+console.log('Node Server Started!');
+console.log('Running Version ' + info.version);
+
+// Connect to database
+database.open(config.database);
+console.log('Connecting to database...');
 
 app.configure(function(){
     
+    //Handlebar templates
+    //More @ https://github.com/donpark/hbs
+    app.set('views', __dirname + '/app/views');        
+    app.set('view engine', 'hbs');
+    
     //The order of which middleware are "defined" using app.use() is very important, 
-    // they are invoked sequentially, thus this defines middleware precedence.
+    // they are invoked sequentially, thus this defines middleware precedence.        
     
     app.use(express.logger({ format: 'dev' }));
         
@@ -32,10 +46,19 @@ app.configure(function(){
     //Handle favicon
     app.use(express.favicon());
     
-    //Handlebar templates
-    //More @ https://github.com/donpark/hbs
-    app.set('views', __dirname + '/views');        
-    app.set('view engine', 'hbs');
+    // Set up sessions
+    app.use(express.session({
+        // Set up MongoDB session storage
+        store: database.sessionStore(config.database),
+        // Set session to expire after 21 days
+        cookie: { maxAge: new Date(Date.now() + 181440000)},
+        // Get session secret from config file
+        secret: config.database.secret
+        }));
+    
+    // Set up passport
+    app.use(passport.initialize());
+    app.use(passport.session());        
     
     //Generic server error handling
     app.use(express.errorHandler({
@@ -51,6 +74,8 @@ app.configure(function(){
     
 });
 
+
+
 //REGISTER ROUTERS
 
 // "app.router" positions our routes 
@@ -62,73 +87,31 @@ app.configure(function(){
 
 app.use(app.router);
 
-
 //Static files can be served with express' static middleware. 
 //I usually make a directory for all static files to be served from the "public" folder.
 app.use('/public', express.static(__dirname + '/public', { maxAge: 86400000 /*one-day*/ }));
 
 //COMMON ROUTES
-require("./routes/common.js")(app); 
-
-
+require("./app/routes/error")(app);
+require("./app/routes/common")(app); 
+require("./app/routes/app")(app); 
 
 //MIDDLEWARE
-
-// Since this is the last non-error-handling
-// middleware use()d, we assume 404, as nothing else
-// responded.
-
-// $ curl http://localhost:8080/notfound
-// $ curl http://localhost:8080/notfound -H "Accept: application/json"
-// $ curl http://localhost:8080/notfound -H "Accept: text/plain"
-
-app.use(function(req, res, next){
-  
-  res.status(404);
-  
-  // respond with html page
-  if (req.accepts('html')) {
-    res.render('error/404.hbs', { url: req.url });
-    return;
-  }
-
-  // respond with json
-  if (req.accepts('json')) {
-    res.send({ error: 'Not found' });
-    return;
-  }
-
-  // default to plain-text. send()
-  res.type('txt').send('Not found');
-    
-});
-
-// error-handling middleware, take the same form
-// as regular middleware, however they require an
-// arity of 4, aka the signature (err, req, res, next).
-// when connect has an error, it will invoke ONLY error-handling
-// middleware.
-
-// If we were to next() here any remaining non-error-handling
-// middleware would then be executed, or if we next(err) to
-// continue passing the error, only error-handling middleware
-// would remain being executed, however here
-// we simply respond with an error page.
-
-app.use(function(err, req, res, next){
-  // we may use properties of the error object
-  // here and next(err) appropriately, or if
-  // we possibly recovered from the error, simply next().
-  res.status(err.status || 500);
-  res.render('error/500.hbs', { error: err });
-});
+require("./app/middleware")(app);
 
 //PROCESS
-require('./lib/process.js')(process);
+process.on('uncaughtException', function (err) {
+  console.log('PROCESS: Caught exception: ' + err);
+});
+
+process.on('exit', function() {  
+  console.log('PROCESS: !!!!!EXITED!!!!');
+});
 
 
 //Kick-Start the server
-app.listen( config.getValue("server.port") || 8080,  //PORT
-            config.getValue("server.host") || "localhost" );  //HOSTNAME
 
-console.log('Server running at http://localhost:8080/');
+app.listen( config.getValue("server.port"),  //PORT
+            config.getValue("server.host"));  //HOSTNAME
+
+console.log(['Server running at http://', config.getValue("server.host"), ':', config.getValue("server.port"), '/'].join(""));

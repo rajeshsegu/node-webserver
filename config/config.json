@@ -1,0 +1,15 @@
+{
+    "server": {
+        "host": "localhost",
+        "port": 5050
+    },
+    "database": {
+        "host"  : "localhost",
+        "port"  : 27017,
+        "db"    : "app",
+        "secret": "top_secret"
+    },
+    "app": {
+        "uploadDir": "./files"    
+    }
+}
