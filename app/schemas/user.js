@@ -117,7 +117,27 @@ UserSchema.static("info", function(email, callback){
       return callback(null, user);         
     });
     
-})
+});
 
+UserSchema.static("edit", function (email, update, callback) {
+    //Allow only edit of firstname / lastname
+    return this.findOneAndUpdate({email: email}, 
+    {
+        name: {
+            first: update.fname,
+            last: update.lname
+        }
+    }, 
+    function (err, user) {
+            if (err) {
+                return callback(err);
+            }
+            if (!user) {
+                return callback(null, false);
+            }
+            return callback(null, user);
+        });
+
+});
 
 module.exports = mongoose.model('User', UserSchema);

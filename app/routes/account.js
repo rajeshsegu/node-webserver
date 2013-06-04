@@ -8,7 +8,7 @@ module.exports = {
     register: function(req, res){
         
         // Save user in database
-        User.add(
+        return User.add(
             {
                 fname : req.body['first'],
                 lname : req.body['last'],
@@ -45,6 +45,22 @@ module.exports = {
                 res.json(500, { error: err });
             }
         })
+    },
+    
+    edit: function(req, res, next){                        
+        
+        //Allow edit of first / last name only.
+        var userInfoUpdate = {};
+        userInfoUpdate["fname"] = req.body['first'];
+        userInfoUpdate["lname"] = req.body['last'];
+
+        return User.edit(req.params.id, userInfoUpdate, function (err, user) {
+                if (user) {
+                    res.json(200, JSON.stringify(user));
+                } else {
+                    res.json(500, {error: err});
+                }
+        });
     }
     
 
