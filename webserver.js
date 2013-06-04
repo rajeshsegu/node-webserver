@@ -38,7 +38,7 @@ app.configure(function(){
     app.use(express.logger({ format: 'dev' }));
         
     app.use(express.cookieParser());
-    app.use(express.bodyParser({ keepExtensions: true, uploadDir: './files' }));
+    app.use(express.bodyParser({ keepExtensions: true, uploadDir: './data/files' }));
     app.use(express.methodOverride());    
     app.use(express.compress());
     app.use(express.responseTime());

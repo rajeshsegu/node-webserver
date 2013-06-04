@@ -110,5 +110,14 @@ UserSchema.static('add', function(userInfo, callback) {
         });
     });
 
+UserSchema.static("info", function(email, callback){
+    this.findOne({ email: email }, function(err, user) {
+      if (err) { return callback(err); }
+      if (!user) { return callback(null, false); }
+      return callback(null, user);         
+    });
+    
+})
+
 
 module.exports = mongoose.model('User', UserSchema);

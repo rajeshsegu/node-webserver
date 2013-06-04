@@ -35,6 +35,16 @@ module.exports = {
     
     logout: function(req, res, next){    
         return Auth.logout(req, res, next);    
+    },
+    
+    info: function(req, res, next){
+        return User.info(req.params.id, function(err, user){
+            if(user){                
+                res.json(200, JSON.stringify(user));                
+            }else{
+                res.json(500, { error: err });
+            }
+        })
     }
     
 
